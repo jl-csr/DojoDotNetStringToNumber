@@ -1,3 +1,4 @@
+using DojoDotNetStringToNumber.Utils;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,10 +9,10 @@ namespace DojoDotNetStringToNumber
     {
         // static readonly string TagMillion = "{million}";
         // static readonly string TagThousand = "{thousand}";
-        // static readonly string TagHundred = "{hundred}";
+        static readonly string TagHundred = "{hundred}";
         static readonly string TagCents = "{cents}";
 
-        static string Mask = $"{TagCents}";
+        static string Mask = $"{TagHundred},{TagCents}";
         static Dictionary<string,int> Numbers = new Dictionary<string, int>();
 
         /// <summary>
@@ -22,6 +23,7 @@ namespace DojoDotNetStringToNumber
             CreateDictionary();
 
             Mask = Mask.Replace(TagCents, GetCents(text));
+            Mask = Mask.Replace(TagHundred, GetHundred(text));
 
             return Mask;
         }
@@ -31,26 +33,48 @@ namespace DojoDotNetStringToNumber
         /// </summary>
         static string GetCents(string text)
         {
-            if(text.ToLower().Contains("centavo"))
-            {
-                // Remove text "centavo" or "centavos" and empty spaces
-                text = text.ToLower()
-                           .Replace("centavos", string.Empty)
-                           .Replace("centavo", string.Empty)
-                           .Trim();
+            if(!text.ToLower().Contains("centavo"))
+                return "00";
+            
+            // Remove text "real" or "reais" and empty spaces
+            text = text.ToLower().SubstringWithRemove(new[] { "real e ", "reais e " });
 
-                var sum = 0;
+            // Remove text "centavo" or "centavos" and empty spaces
+            text = text.ToLower().ReplaceAll(new[] { "centavos", "centavo" }, string.Empty);
 
-                text.ToLower()
-                    .Split(" e ", StringSplitOptions.RemoveEmptyEntries).ToList()
-                    .ForEach(v => sum += Numbers[v.Trim()] );
+            var sum = 0;
 
-                return $"{sum.ToString().PadLeft(2, '0')}";
-            }
+            text.ToLower()
+                .Split(" e ", StringSplitOptions.RemoveEmptyEntries).ToList()
+                .ForEach(v => sum += Numbers[v.Trim()] );
 
-            return "00";
+            return $"{sum.ToString().PadLeft(2, '0')}";
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        static string GetHundred(string text)
+        {
+            if(!text.ToLower().Contains("real") && !text.ToLower().Contains("reais"))
+                return "0,00";
+
+            // Remove text "real" or "reais" and empty spaces
+            text = text.ToLower().Substring(new[] { "real", "reais" }).Trim();
+            text = text.ToLower().ReplaceAll(new[] { "real", "reais" }, string.Empty).Trim();
+
+            var sum = 0;
+
+            text.ToLower()
+                .Split(" e ", StringSplitOptions.RemoveEmptyEntries).ToList()
+                .ForEach(v => sum += Numbers[v.Trim()] );
+
+            return $"{sum}";
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
         static void CreateDictionary()
         {
             Numbers.Add("um", 1);
@@ -82,6 +106,7 @@ namespace DojoDotNetStringToNumber
             Numbers.Add("oitenta", 80);
             Numbers.Add("noventa", 90);
             Numbers.Add("cem", 100);
+            Numbers.Add("cento", 100);
             Numbers.Add("duzentos", 200);
             Numbers.Add("trezentos", 300);
             Numbers.Add("quatrocentos", 400);
