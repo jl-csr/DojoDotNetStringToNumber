@@ -1,0 +1,11 @@
+/home/julio/Documents/dev/projects/dojo/DojoDotNetStringToNumber/bin/Debug/netcoreapp3.0/DojoDotNetStringToNumber
+/home/julio/Documents/dev/projects/dojo/DojoDotNetStringToNumber/bin/Debug/netcoreapp3.0/DojoDotNetStringToNumber.deps.json
+/home/julio/Documents/dev/projects/dojo/DojoDotNetStringToNumber/bin/Debug/netcoreapp3.0/DojoDotNetStringToNumber.runtimeconfig.json
+/home/julio/Documents/dev/projects/dojo/DojoDotNetStringToNumber/bin/Debug/netcoreapp3.0/DojoDotNetStringToNumber.runtimeconfig.dev.json
+/home/julio/Documents/dev/projects/dojo/DojoDotNetStringToNumber/bin/Debug/netcoreapp3.0/DojoDotNetStringToNumber.dll
+/home/julio/Documents/dev/projects/dojo/DojoDotNetStringToNumber/bin/Debug/netcoreapp3.0/DojoDotNetStringToNumber.pdb
+/home/julio/Documents/dev/projects/dojo/DojoDotNetStringToNumber/obj/Debug/netcoreapp3.0/DojoDotNetStringToNumber.csprojAssemblyReference.cache
+/home/julio/Documents/dev/projects/dojo/DojoDotNetStringToNumber/obj/Debug/netcoreapp3.0/DojoDotNetStringToNumber.AssemblyInfoInputs.cache
+/home/julio/Documents/dev/projects/dojo/DojoDotNetStringToNumber/obj/Debug/netcoreapp3.0/DojoDotNetStringToNumber.AssemblyInfo.cs
+/home/julio/Documents/dev/projects/dojo/DojoDotNetStringToNumber/obj/Debug/netcoreapp3.0/DojoDotNetStringToNumber.dll
+/home/julio/Documents/dev/projects/dojo/DojoDotNetStringToNumber/obj/Debug/netcoreapp3.0/DojoDotNetStringToNumber.pdb
