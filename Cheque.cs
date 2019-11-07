@@ -41,8 +41,10 @@ namespace DojoDotNetStringToNumber
         /// </summary>
         static string GetCents(string text)
         {
+            var sum = "0";
+
             if(!text.ToLower().Contains("centavo"))
-                return "00";
+                return sum.PadLeft(2, '0');
             
             // Remove text "real" or "reais" and empty spaces
             text = text.ToLower().SubstringWhen(new[] { "real e ", "reais e " });
@@ -52,8 +54,6 @@ namespace DojoDotNetStringToNumber
 
             // Remove text "centavo" or "centavos" and empty spaces
             text = text.ToLower().ReplaceAll(new[] { "centavos", "centavo" }, string.Empty);
-
-            var sum = 0;
 
             text.ToLower()
                 .Split(" e ", StringSplitOptions.RemoveEmptyEntries).ToList()
@@ -67,6 +67,8 @@ namespace DojoDotNetStringToNumber
         /// </summary>
         static string GetHundred(string text)
         {
+            var sum = 0;
+
             if(!text.ToLower().Contains("real") && !text.ToLower().Contains("reais"))
                 return text.ToLower().Contains("mil") ? "000," : "0,";
 
@@ -78,8 +80,6 @@ namespace DojoDotNetStringToNumber
 
             // Remove text "real" or "reais" and empty spaces
             text = text.ToLower().ReplaceAll(new[] { "real e", "reais e", "real", "reais" }, string.Empty).Trim();
-
-            var sum = 0;
 
             text.ToLower()
                 .Split(" e ", StringSplitOptions.RemoveEmptyEntries).ToList()
@@ -93,6 +93,8 @@ namespace DojoDotNetStringToNumber
         /// </summary>
         static string GetThousand(string text)
         {
+            var sum = 0;
+
             if(!text.ToLower().Contains("mil") && !text.ToLower().Contains("reais"))
                 return string.Empty;
 
@@ -101,8 +103,6 @@ namespace DojoDotNetStringToNumber
 
             if(text.Length == 0)
                 text = "um";
-
-            var sum = 0;
 
             text.ToLower()
                 .Split(" e ", StringSplitOptions.RemoveEmptyEntries).ToList()
