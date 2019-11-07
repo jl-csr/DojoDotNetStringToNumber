@@ -8,11 +8,16 @@ namespace DojoDotNetStringToNumber
     public static class Cheque
     {
         // static readonly string TagMillion = "{million}";
-        // static readonly string TagThousand = "{thousand}";
+        static readonly string TagThousand = "{thousand}";
+
         static readonly string TagHundred = "{hundred}";
+
         static readonly string TagCents = "{cents}";
 
-        static string Mask = $"{TagHundred},{TagCents}";
+        static string Mask = $"{TagThousand}{TagHundred}{TagCents}";
+
+        static string Text = "";
+
         static Dictionary<string,int> Numbers = new Dictionary<string, int>();
 
         /// <summary>
@@ -22,8 +27,11 @@ namespace DojoDotNetStringToNumber
         {
             CreateDictionary();
 
-            Mask = Mask.Replace(TagCents, GetCents(text));
-            Mask = Mask.Replace(TagHundred, GetHundred(text));
+            Text = text;
+
+            Mask = Mask.Replace(TagCents, GetCents(Text));
+            Mask = Mask.Replace(TagHundred, GetHundred(Text));
+            Mask = Mask.Replace(TagThousand, GetThousand(Text));
 
             return Mask;
         }
@@ -37,7 +45,10 @@ namespace DojoDotNetStringToNumber
                 return "00";
             
             // Remove text "real" or "reais" and empty spaces
-            text = text.ToLower().SubstringWithRemove(new[] { "real e ", "reais e " });
+            text = text.ToLower().SubstringWhen(new[] { "real e ", "reais e " });
+
+            // Remove partial text from complete text
+            Text = Text.Replace(text, string.Empty);
 
             // Remove text "centavo" or "centavos" and empty spaces
             text = text.ToLower().ReplaceAll(new[] { "centavos", "centavo" }, string.Empty);
@@ -47,7 +58,7 @@ namespace DojoDotNetStringToNumber
             text.ToLower()
                 .Split(" e ", StringSplitOptions.RemoveEmptyEntries).ToList()
                 .ForEach(v => sum += Numbers[v.Trim()] );
-
+            
             return $"{sum.ToString().PadLeft(2, '0')}";
         }
 
@@ -57,11 +68,16 @@ namespace DojoDotNetStringToNumber
         static string GetHundred(string text)
         {
             if(!text.ToLower().Contains("real") && !text.ToLower().Contains("reais"))
-                return "0,00";
+                return text.ToLower().Contains("mil") ? "000," : "0,";
+
+            // Remove text "mil" and empty spaces
+            text = text.ToLower().SubstringWhen(new[] { "mil e", "mil" }).Trim();
+
+            // Remove partial text from complete text
+            Text = Text.Replace(text, string.Empty);
 
             // Remove text "real" or "reais" and empty spaces
-            text = text.ToLower().Substring(new[] { "real", "reais" }).Trim();
-            text = text.ToLower().ReplaceAll(new[] { "real", "reais" }, string.Empty).Trim();
+            text = text.ToLower().ReplaceAll(new[] { "real e", "reais e", "real", "reais" }, string.Empty).Trim();
 
             var sum = 0;
 
@@ -69,7 +85,30 @@ namespace DojoDotNetStringToNumber
                 .Split(" e ", StringSplitOptions.RemoveEmptyEntries).ToList()
                 .ForEach(v => sum += Numbers[v.Trim()] );
 
-            return $"{sum}";
+            return $"{sum.ToString().PadLeft(3, '0')},";
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        static string GetThousand(string text)
+        {
+            if(!text.ToLower().Contains("mil") && !text.ToLower().Contains("reais"))
+                return string.Empty;
+
+            // Remove text "real" or "reais" and empty spaces
+            text = text.ToLower().ReplaceAll(new[] { "mil e", "mil" }, string.Empty).Trim();
+
+            if(text.Length == 0)
+                text = "um";
+
+            var sum = 0;
+
+            text.ToLower()
+                .Split(" e ", StringSplitOptions.RemoveEmptyEntries).ToList()
+                .ForEach(v => sum += Numbers[v.Trim()] );
+
+            return $"{sum}.";
         }
 
         /// <summary>

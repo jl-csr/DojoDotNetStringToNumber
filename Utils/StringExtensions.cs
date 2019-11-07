@@ -5,7 +5,7 @@ namespace DojoDotNetStringToNumber.Utils
         /// <summary>
         /// 
         /// </summary>
-        public static string SubstringWithRemove(this string text, string[] search)
+        public static string SubstringWhen(this string text, string[] search)
         {
             foreach (var s in search)
             {
@@ -30,6 +30,30 @@ namespace DojoDotNetStringToNumber.Utils
             return text;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        public static string SubstringBetween(this string text, string start, string[] end)
+        {
+            var indexStart = text.IndexOf(start) + start.Length;
+            var indexEnd = 0;
+
+            foreach (var s in end)
+            {
+                if(text.Contains(s))
+                {
+                    indexEnd = (text.IndexOf(s) + s.Length);
+
+                    break;
+                }
+            }
+
+            return text.Substring(indexStart, indexEnd);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
         public static string ReplaceAll(this string text, string[] search, string replace)
         {
             foreach (var s in search)
